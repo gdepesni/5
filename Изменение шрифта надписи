@@ -1,0 +1,80 @@
+html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: sans-serif;
+            background-color: #e0e0e0;
+        }
+
+        /* Окно приложения */
+        .window {
+            width: 800px;
+            height: 400px;
+            background-color: white;
+            border: 2px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            overflow: hidden; /* Чтобы текст не вылезал за границы */
+        }
+
+        /* Наша надпись (JLabel) */
+        #j-label {
+            font-family: "Georgia", serif;
+            font-style: italic;
+            font-size: 50px; /* Начальный размер */
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        /* Контейнер для слайдера */
+        .controls {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="range"] {
+            width: 300px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <label for="font-slider">Размер шрифта: <span id="font-value">50</span>px</label><br>
+        <!-- Слайдер от 5 до 100 -->
+        <input type="range" id="font-slider" min="5" max="100" value="50">
+    </div>
+
+    <div class="window">
+        <div id="j-label">Моя первая надпись!</div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('font-slider');
+        const label = document.getElementById('j-label');
+        const valueDisplay = document.getElementById('font-value');
+
+        // Слушаем изменения слайдера
+        slider.oninput = function() {
+            const size = this.value;
+            // Меняем размер шрифта у надписи
+            label.style.fontSize = size + 'px';
+            // Обновляем текстовое значение рядом со слайдером
+            valueDisplay.innerText = size;
+        };
+    </script>
+
+</body>
+</html>
