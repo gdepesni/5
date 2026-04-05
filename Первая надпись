@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* Создаем "окно" произвольного размера (например, 800x400) */
+        .window {
+            width: 800px;
+            height: 400px;
+            background-color: #f0f0f0;
+            border: 2px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin: 50px auto;
+            
+            /* Центрирование содержимого (JLabel) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Имитация JLabel с заданным шрифтом */
+        .j-label {
+            /* Шрифт: Любой (Georgia), Курсив (italic), Размер (50px) */
+            font-family: "Georgia", serif;
+            font-style: italic;
+            font-size: 50px;
+            color: #2c3e50;
+            user-select: none; /* Чтобы нельзя было выделить, как в Java */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="j-label">Моя первая надпись!</div>
+    </div>
+
+</body>
+</html>
