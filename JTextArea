@@ -1,0 +1,67 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TextAreaApp extends JFrame {
+    public TextAreaApp() {
+        // Настройки окна
+        setTitle("Добавление строк в JTextArea");
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Используем BorderLayout с отступами
+        setLayout(new BorderLayout(10, 10));
+
+        // 1. Верхняя панель с текстовым полем
+        JTextField inputField = new JTextField();
+        inputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        // 2. Кнопка "Записать"
+        JButton addBtn = new JButton("Записать");
+
+        // Группируем поле и кнопку в одну верхнюю панель
+        JPanel topPanel = new JPanel(new BorderLayout(5, 5));
+        topPanel.add(inputField, BorderLayout.CENTER);
+        topPanel.add(addBtn, BorderLayout.SOUTH);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // 3. Многострочное текстовое поле (JTextArea)
+        JTextArea textArea = new JTextArea();
+        textArea.setEditable(false); // Запрещаем прямое редактирование пользователем
+        textArea.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        // 4. Добавляем прокрутку (JScrollPane) к текстовой области
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        // Устанавливаем режим: вертикальный ползунок появляется по необходимости
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // Логика кнопки "Записать"
+        addBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String text = inputField.getText().trim();
+                if (!text.isEmpty()) {
+                    // Метод append дописывает текст в конец области
+                    textArea.append(text + "\n");
+                    // Очищаем поле ввода после записи
+                    inputField.setText("");
+                    // Возвращаем фокус на поле ввода для удобства
+                    inputField.requestFocus();
+                }
+            }
+        });
+
+        // Размещаем компоненты в основном окне
+        add(topPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Центрируем и отображаем
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new TextAreaApp());
+    }
+}
