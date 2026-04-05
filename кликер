@@ -1,0 +1,71 @@
+html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Приложение-кликер</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
+        .clicker-container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #ddd;
+        }
+        #counter-label {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        #click-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+        #click-button:hover {
+            background-color: #218838;
+        }
+        #click-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clicker-container">
+        <!-- Надпись (JLabel) -->
+        <div id="counter-label">Количество нажатий: 0</div>
+        
+        <!-- Кнопка (JButton) -->
+        <button id="click-button">Нажми на меня!</button>
+    </div>
+
+    <script>
+        let count = 0;
+        const label = document.getElementById('counter-label');
+        const button = document.getElementById('click-button');
+
+        // Обработчик события клика
+        button.onclick = function() {
+            count++; // Увеличиваем счетчик
+            label.innerText = `Количество нажатий: ${count}`; // Обновляем текст
+        };
+    </script>
+
+</body>
+</html>
