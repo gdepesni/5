@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* Стили для модального окна */
+        #modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: flex;
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal {
+            background: white; padding: 20px; border-radius: 10px;
+            width: 350px; text-align: center; font-family: Arial, sans-serif;
+        }
+        input {
+            width: 80%; padding: 10px; margin: 15px 0;
+            border: 1px solid #ccc; border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px; cursor: pointer; border: none;
+            border-radius: 5px; background: #007bff; color: white; margin: 5px;
+        }
+        .cancel-btn { background: #dc3545; }
+        .error { color: red; font-size: 12px; display: none; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="modal-overlay">
+    <div class="modal" id="modal-box">
+        <h3 id="modal-title">Приветствие</h3>
+        <p id="modal-text">Добро пожаловать! Хотите зарегистрироваться?</p>
+        <div id="input-container" style="display:none;">
+            <input type="text" id="user-input">
+            <div id="error-msg" class="error">Ошибка вводе</div>
+        </div>
+        <div id="buttons">
+            <button id="ok-btn">Да</button>
+            <button id="cancel-btn" class="cancel-btn">Нет</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const overlay = document.getElementById('modal-overlay');
+    const title = document.getElementById('modal-title');
+    const text = document.getElementById('modal-text');
+    const inputContainer = document.getElementById('input-container');
+    const input = document.getElementById('user-input');
+    const errorMsg = document.getElementById('error-msg');
+    const okBtn = document.getElementById('ok-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+
+    let step = 1;
+    let savedLogin = "";
+    let savedPassword = "";
+
+    // Функция обновления окна под текущий шаг
+    function updateStep() {
+        errorMsg.style.display = 'none';
+        input.value = "";
+        
+        if (step === 1) {
+            title.innerText = "Регистрация";
+            text.innerText = "Желаете зарегистрироваться в программе?";
+            okBtn.innerText = "Да";
+            cancelBtn.innerText = "Нет";
+        } else if (step === 2) {
+            title.innerText = "Шаг 1: Логин";
+            text.innerText = "Введите логин (более 5 символов, без пробелов):";
+            inputContainer.style.display = 'block';
+            input.type = "text";
+            okBtn.innerText = "Далее";
+            cancelBtn.style.display = 'none';
+        } else if (step === 3) {
+            title.innerText = "Шаг 2: Пароль";
+            text.innerText = "Введите пароль (8+ символов, цифра + буква, без пробелов):";
+            input.type = "password";
+        } else if (step === 4) {
+            title.innerText = "Шаг 3: Подтверждение";
+            text.innerText = "Повторите введенный пароль:";
+            input.type = "password";
+        } else if (step === 5) {
+            inputContainer.style.display = 'none';
+            title.innerText = "Успех!";
+            text.innerText = "Регистрация успешно завершена!";
+            okBtn.innerText = "Закрыть";
+        }
+    }
+
+    okBtn.onclick = () => {
+        const val = input.value.trim();
+        
+        if (step === 1) {
+            step = 2;
+            updateStep();
+        } 
+        else if (step === 2) {
+            // Валидация логина
+            if (val.length > 5 && !/\s/.test(input.value)) {
+                savedLogin = val;
+                step = 3;
+                updateStep();
+            } else {
+                showError("Логин слишком короткий или содержит пробелы!");
+            }
+        } 
+        else if (step === 3) {
+            // Валидация пароля (8+ симв, без пробелов, буква + цифра)
+            const passRegex = /^(?=.*[A-Za-zА-Яа-я])(?=.*\d)[A-Za-zА-Яа-я\d]{8,}$/;
+            if (passRegex.test(input.value) && !/\s/.test(input.value)) {
+                savedPassword = input.value;
+                step = 4;
+                updateStep();
+            } else {
+                showError("Пароль должен быть 8+ символов и содержать букву и цифру!");
+            }
+        } 
+        else if (step === 4) {
+            if (input.value === savedPassword) {
+                step = 5;
+                updateStep();
+            } else {
+                showError("Пароли не совпадают!");
+            }
+        } 
+        else if (step === 5) {
+            overlay.style.display = 'none';
+        }
+    };
+
+    cancelBtn.onclick = () => {
+        overlay.innerHTML = "<div class='modal'><h3>Программа завершена</h3></div>";
+    };
+
+    function showError(msg) {
+        errorMsg.innerText = msg;
+        errorMsg.style.display = 'block';
+    }
+
+    updateStep();
+</script>
+</body>
+</html>
