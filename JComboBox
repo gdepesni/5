@@ -1,0 +1,71 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class ColorPickerApp extends JFrame {
+    public ColorPickerApp() {
+        // Настройки окна
+        setTitle("Выбор цвета");
+        setSize(400, 350);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+
+        // 1. Выпадающий список (JComboBox)
+        String[] colors = {"Красный", "Синий", "Зеленый", "Желтый"};
+        JComboBox<String> colorBox = new JComboBox<>(colors);
+        colorBox.setPreferredSize(new Dimension(200, 30));
+
+        // 2. Чекбокс и текстовое поле для своего варианта
+        JCheckBox ownOption = new JCheckBox("Свой вариант");
+        JTextField customTextField = new JTextField(15);
+        customTextField.setEnabled(false); // По умолчанию поле заблокировано
+        customTextField.setToolTipText("Введите свой цвет");
+
+        // 3. Кнопка и надпись результата
+        JButton answerBtn = new JButton("Ответить");
+        JLabel resultLabel = new JLabel("Ответ: ");
+        resultLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        // Логика работы чекбокса: активируем поле только если стоит галочка
+        ownOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                customTextField.setEnabled(ownOption.isSelected());
+                if (!ownOption.isSelected()) {
+                    customTextField.setText(""); // Очищаем поле при выключении
+                }
+            }
+        });
+
+        // Логика кнопки "Ответить"
+        answerBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String finalColor;
+                if (ownOption.isSelected()) {
+                    finalColor = customTextField.getText().trim();
+                    if (finalColor.isEmpty()) finalColor = "Не введено";
+                } else {
+                    finalColor = (String) colorBox.getSelectedItem();
+                }
+                resultLabel.setText("Ответ: " + finalColor);
+            }
+        });
+
+        // Добавляем компоненты на форму
+        add(colorBox);
+        add(ownOption);
+        add(customTextField);
+        add(answerBtn);
+        add(resultLabel);
+
+        // Центрируем и отображаем
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new ColorPickerApp());
+    }
+}
