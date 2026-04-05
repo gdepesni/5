@@ -1,0 +1,99 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class QuizApp extends JFrame {
+    // Данные викторины: {Вопрос, Вариант1, Вариант2, Вариант3, Вариант4, Индекс правильного ответа}
+    private String[][] questions = {
+        {"Какой язык программирования мы изучаем?", "Python", "Java", "C++", "JavaScript", "1"},
+        {"Что такое JFrame в Swing?", "Кнопка", "Надпись", "Окно", "Список", "2"},
+        {"Сколько байт в типе int в Java?", "1", "2", "4", "8", "2"}
+    };
+
+    private int currentIdx = 0; // Номер текущего вопроса
+    private int score = 0;      // Счет правильных ответов
+
+    private JLabel questionLabel;
+    private JButton[] optionButtons = new JButton[4];
+    private JLabel progressLabel;
+
+    public QuizApp() {
+        // Настройки окна
+        setTitle("Викторина");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(10, 10));
+
+        // 1. Верхняя панель с прогрессом
+        progressLabel = new JLabel("Вопрос 1 из " + questions.length, SwingConstants.RIGHT);
+        progressLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+        add(progressLabel, BorderLayout.NORTH);
+
+        // 2. Панель вопроса (в центре)
+        questionLabel = new JLabel("", SwingConstants.CENTER);
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        questionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        add(questionLabel, BorderLayout.CENTER);
+
+        // 3. Панель ответов (сетка 2x2 внизу)
+        JPanel buttonsPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        buttonsPanel.setPreferredSize(new Dimension(600, 150));
+        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        for (int i = 0; i < 4; i++) {
+            optionButtons[i] = new JButton();
+            final int choice = i;
+            optionButtons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    checkAnswer(choice);
+                }
+            });
+            buttonsPanel.add(optionButtons[i]);
+        }
+        add(buttonsPanel, BorderLayout.SOUTH);
+
+        // Загружаем первый вопрос
+        loadQuestion();
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void loadQuestion() {
+        if (currentIdx < questions.length) {
+            // Обновляем текст вопроса и кнопок
+            questionLabel.setText("<html><center>" + questions[currentIdx][0] + "</center></html>");
+            for (int i = 0; i < 4; i++) {
+                optionButtons[i].setText(questions[currentIdx][i + 1]);
+            }
+            progressLabel.setText("Вопрос " + (currentIdx + 1) + " из " + questions.length);
+        } else {
+            showFinalResult();
+        }
+    }
+
+    private void checkAnswer(int selectedIdx) {
+        int correctIdx = Integer.parseInt(questions[currentIdx][5]);
+        
+        if (selectedIdx == correctIdx) {
+            score++;
+        }
+
+        currentIdx++;
+        loadQuestion();
+    }
+
+    private void showFinalResult() {
+        JOptionPane.showMessageDialog(this, 
+            "Викторина завершена!\nВаш результат: " + score + " из " + questions.length,
+            "Итоги", 
+            JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new QuizApp());
+    }
+}
