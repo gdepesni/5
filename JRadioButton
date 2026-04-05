@@ -1,0 +1,73 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SeasonPicker extends JFrame {
+    public SeasonPicker() {
+        // Настройка окна
+        setTitle("Выбор времени года");
+        setSize(300, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+
+        // Создаем радио-кнопки
+        JRadioButton spring = new JRadioButton("Весна");
+        JRadioButton summer = new JRadioButton("Лето");
+        JRadioButton autumn = new JRadioButton("Осень");
+        JRadioButton winter = new JRadioButton("Зима");
+
+        // ОБЯЗАТЕЛЬНО: Объединяем кнопки в одну группу (ButtonGroup)
+        // Это позволяет выбирать только один вариант из четырех
+        ButtonGroup group = new ButtonGroup();
+        group.add(spring);
+        group.add(summer);
+        group.add(autumn);
+        group.add(winter);
+
+        // Кнопка для ответа
+        JButton answerBtn = new JButton("Ответить");
+
+        // Надпись для вывода результата
+        JLabel resultLabel = new JLabel("Ответ: ");
+        resultLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        // Добавляем элементы на панель с отступами
+        add(Box.createRigidArea(new Dimension(0, 20)));
+        add(spring);
+        add(summer);
+        add(autumn);
+        add(winter);
+        add(Box.createRigidArea(new Dimension(0, 20)));
+        add(answerBtn);
+        add(Box.createRigidArea(new Dimension(0, 20)));
+        add(resultLabel);
+
+        // Логика нажатия на кнопку
+        answerBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selected = "";
+                if (spring.isSelected()) selected = "Весна";
+                else if (summer.isSelected()) selected = "Лето";
+                else if (autumn.isSelected()) selected = "Осень";
+                else if (winter.isSelected()) selected = "Зима";
+
+                if (!selected.isEmpty()) {
+                    resultLabel.setText("Ответ: " + selected);
+                } else {
+                    resultLabel.setText("Ответ: ничего не выбрано");
+                }
+            }
+        });
+
+        // Центрируем окно и показываем
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        // Запуск приложения
+        SwingUtilities.invokeLater(() -> new SeasonPicker());
+    }
+}
