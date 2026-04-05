@@ -1,0 +1,51 @@
+mport javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SpinnerApp extends JFrame {
+    public SpinnerApp() {
+        // Базовые настройки окна
+        setTitle("JSpinner Example");
+        setSize(300, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
+
+        // 1. Создаем JSpinner (начальное значение 12, минимум 0, максимум 100, шаг 1)
+        SpinnerModel model = new SpinnerNumberModel(12, 0, 100, 1);
+        JSpinner spinner = new JSpinner(model);
+        // Немного увеличим размер спиннера для удобства
+        spinner.setPreferredSize(new Dimension(60, 30));
+
+        // 2. Создаем кнопку "Ответить"
+        JButton button = new JButton("Ответить");
+
+        // 3. Создаем надпись для вывода ответа
+        JLabel resultLabel = new JLabel("Ответ: ");
+        resultLabel.setFont(new Font("Arial", Font.PLAIN, 24));
+
+        // Добавляем компоненты на форму
+        add(spinner);
+        add(button);
+        add(resultLabel);
+
+        // Обработка нажатия кнопки
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Получаем значение из спиннера и обновляем текст
+                Object value = spinner.getValue();
+                resultLabel.setText("Ответ: " + value);
+            }
+        });
+
+        // Центрируем и отображаем
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        // Запуск в потоке обработки событий
+        SwingUtilities.invokeLater(() -> new SpinnerApp());
+    }
+}
