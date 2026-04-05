@@ -1,0 +1,106 @@
+mport javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CalculatorApp extends JFrame {
+    private JTextField display;
+    private double firstNum = 0;
+    private String operator = "";
+    private boolean startNewNumber = true;
+
+    public CalculatorApp() {
+        setTitle("Калькулятор");
+        setSize(300, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(5, 5));
+
+        // Поле ввода (дисплей)
+        display = new JTextField("0");
+        display.setFont(new Font("Arial", Font.BOLD, 24));
+        display.setHorizontalAlignment(JTextField.RIGHT);
+        display.setEditable(false);
+        add(display, BorderLayout.NORTH);
+
+        // Панель с кнопками
+        JPanel panel = new JPanel(new GridLayout(4, 4, 5, 5));
+        String[] buttons = {
+            "7", "8", "9", "/",
+            "4", "5", "6", "*",
+            "1", "2", "3", "-",
+            "C", "0", "=", "+"
+        };
+
+        for (String text : buttons) {
+            JButton button = new JButton(text);
+            button.setFont(new Font("Arial", Font.PLAIN, 18));
+            button.addActionListener(new ButtonClickListener());
+            panel.add(button);
+        }
+
+        add(panel, BorderLayout.CENTER);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private class ButtonClickListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+
+            if ("0123456789".contains(command)) {
+                if (startNewNumber) {
+                    display.setText(command);
+                    startNewNumber = false;
+                } else {
+                    display.setText(display.getText() + command);
+                }
+            } else if (command.equals("C")) {
+                display.setText("0");
+                firstNum = 0;
+                operator = "";
+                startNewNumber = true;
+            } else if (command.equals("=")) {
+                calculate(Double.parseDouble(display.getText()));
+                operator = "";
+                startNewNumber = true;
+            } else { // Операторы +, -, *, /
+                if (!operator.isEmpty()) {
+                    calculate(Double.parseDouble(display.getText()));
+                } else {
+                    firstNum = Double.parseDouble(display.getText());
+                }
+                operator = command;
+                startNewNumber = true;
+            }
+        }
+
+        private void calculate(double secondNum) {
+            switch (operator) {
+                case "+": firstNum += secondNum; break;
+                case "-": firstNum -= secondNum; break;
+                case "*": firstNum *= secondNum; break;
+                case "/":
+                    if (secondNum == 0) {
+                        display.setText("Ошибка: / 0");
+                        firstNum = 0;
+                        operator = "";
+                        startNewNumber = true;
+                        return;
+                    }
+                    firstNum /= secondNum;
+                    break;
+            }
+            // Убираем лишние нули после запятой, если число целое
+            if (firstNum == (long) firstNum) {
+                display.setText(String.valueOf((long) firstNum));
+            } else {
+                display.setText(String.valueOf(firstNum));
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new CalculatorApp());
+    }
+}
